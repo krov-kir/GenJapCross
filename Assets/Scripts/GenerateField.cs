@@ -9,6 +9,12 @@ public class GenerateField : MonoBehaviour
 {
     public InputField InputSize;
     public InputField InputNumMap;
+    public ScrollRect scr;
+
+    private void Awake()
+    {
+        StaticClass.Num_map = 0.ToString();
+    }
     private void GenMap()
     {
         int size = StaticClass.Size;
@@ -24,11 +30,21 @@ public class GenerateField : MonoBehaviour
     }
     public void Generate()
     {
+        var d = new DirectoryInfo("Assets/Maps/");
+        long i = 0;
+        FileInfo[] fis = d.GetFiles();
+        foreach (FileInfo fi in fis)
+        {
+            if (fi.Extension.Equals(".txt"))
+                i++;
+        }
+
         if (InputSize.text == "")
             StaticClass.Size = 6;
         else
             StaticClass.Size = int.Parse(InputSize.text);
         GenMap();
+        StaticClass.Num_map = (i + 1).ToString();
         SceneManager.LoadScene("Generator", LoadSceneMode.Single);
     }
     public void Load()
