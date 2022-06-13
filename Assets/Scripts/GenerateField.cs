@@ -40,6 +40,7 @@ public class GenerateField : MonoBehaviour
             if (fi.Extension.Equals(".txt"))
                 i++;
         }
+        
 
         if (InputSize.text == "")
             StaticClass.Size = 6;

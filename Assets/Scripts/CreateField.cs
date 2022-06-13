@@ -13,29 +13,45 @@ public class CreateField : MonoBehaviour
     public void SaveToFile()
     {
         string dir = "Assets/Maps/Creatures/map";
-        dir = dir + StaticClass.Num_map + ".txt";
-        File.Create(dir);
-        File.WriteAllText(dir, StaticClass.Size.ToString() + "\n");
-        for (int i = 0; i < size; i++)
+        dir += (StaticClass.Num_map + ".txt");
+        var f = new FileInfo(dir);
+        f.Create();
+
+        if (File.Exists(dir))
         {
-            string s = "";
-            for (int j = 0; j < size; j++)
+            var _curr_map = StaticClass.Map;
+            StreamWriter sw;
+            sw = f.AppendText();
+            sw.WriteLine(StaticClass.Size.ToString());
+            //File.WriteAllText(dir, StaticClass.Size.ToString() + "\n");
+            for (int i = 0; i < size; i++)
             {
-                if (StaticClass.Map[i][j])
-                    s += "1";
-                else
-                    s += "0";
+                string s = "";
+                for (int j = 0; j < size; j++)
+                {
+                    if (_curr_map[i][j])
+                        s += "1";
+                    else
+                        s += "0";
+                }
+                //s += "\n";
+                sw.WriteLine(s);
+                //File.AppendAllText(dir, s);
             }
-            s += "\n";
-            File.AppendAllText(dir, s);
+            for (int i = 0; i < size; i++)
+            {
+                string s = "";
+                for (int j = 0; j < size; j++)
+                    s += "0";
+                //s += "\n";
+                sw.WriteLine(s);
+                //File.AppendAllText(dir, s);
+            }
+            sw.Close();
         }
-        for (int i = 0; i < size; i++)
+        else
         {
-            string s = "";
-            for (int j = 0; j < size; j++)
-                s += "0";
-            s += "\n";
-            File.AppendAllText(dir, s);
+            Debug.Log("Not exists");
         }
     }
 

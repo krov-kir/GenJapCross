@@ -758,6 +758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   square: {fileID: 5289536505924660693, guid: d44f1d009fc82bc428bc2ad23f8efff6, type: 3}
+  num: {fileID: 4308668985000212174, guid: 94455e5006b3b7840a4be88f6def2845, type: 3}
   size: 0
   camera: {fileID: 1671242162}
   text: {fileID: 295907402}

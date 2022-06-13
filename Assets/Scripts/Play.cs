@@ -4,15 +4,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Linq;
 
 public class Play : MonoBehaviour
 {
     public GameObject square;
+    public GameObject num;
     public int size;
     public new Camera camera;
+    public Text text;
     private List<List<bool>> _game_map;
     private List<List<bool>> _curr_map;
-    public Text text;
+    private float firstX;
+    private float firstY;
     public void SaveToFile()
     {
         string dir = "Assets/Maps/Games/map";
@@ -52,14 +56,82 @@ public class Play : MonoBehaviour
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
-    void Start()
+    private void GetHorNum()
     {
-        text.GetComponent<Text>().enabled = false;
-        size = StaticClass.Size;
-        _game_map = StaticClass.Game_map;
+        List<List<int>> hor_num = new List<List<int>>();
+        for (int i = 0; i < size; i++)
+        {
+            int c = 0;
+            List<int> row = new List<int>();
+            for (int j = 0; j < size; j++)
+            {
+                if (_game_map[i][j])
+                    c++;
+                else
+                {
+                    if (c != 0)
+                        row.Add(c);
+                    c = 0;
+                }
+            }
+            if (c != 0)
+                row.Add(c);
+            hor_num.Add(row);
+        }
 
-        float firstX = -size / 2.0f + 0.5f;
-        float firstY = size / 2.0f - 0.5f;
+        for (int i = 0; i < size; i++)
+        {
+            int row_size = hor_num[i].Count;
+            for (int j = 0; j < row_size; j++)
+            {
+                GameObject clone = Instantiate(num, new Vector3(firstX - row_size + j, firstY - i, 1.0f), Quaternion.identity);
+                clone.name = "HorNum " + i.ToString() + "," + j.ToString();
+                clone.GetComponent<TextMesh>().text = hor_num[i][j].ToString();
+            }
+        }
+    }
+
+    private void GetVerNum()
+    {
+        float max = 3.0f;
+        List<List<int>> ver_num = new List<List<int>>();
+        for (int j = 0; j < size; j++)
+        {
+            int c = 0;
+            List<int> col = new List<int>();
+            for (int i = 0; i < size; i++)
+            {
+                if (_game_map[i][j])
+                    c++;
+                else
+                {
+                    if (c != 0)
+                        col.Add(c);
+                    c = 0;
+                }
+            }
+            if (c != 0)
+                col.Add(c);
+            ver_num.Add(col);
+            max = col.Max() >= max ? col.Max() : max;
+        }
+
+        camera.orthographicSize = size / 2.0f + max;
+
+        for (int i = 0; i < size; i++)
+        {
+            int col_size = ver_num[i].Count;
+            for (int j = 0; j < col_size; j++)
+            {
+                GameObject clone = Instantiate(num, new Vector3(firstX + i, firstY + (col_size - j), 1.0f), Quaternion.identity);
+                clone.name = "VerNum " + i.ToString() + "," + j.ToString();
+                clone.GetComponent<TextMesh>().text = ver_num[i][j].ToString();
+            }
+        }
+    }
+
+    private void GetField()
+    {
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -68,7 +140,20 @@ public class Play : MonoBehaviour
                 clone.name = i.ToString() + "," + j.ToString();
             }
         }
-        camera.orthographicSize = size / 2.0f + 2.0f;
+    }
+
+    void Start()
+    {
+        text.GetComponent<Text>().enabled = false;
+        size = StaticClass.Size;
+        _game_map = StaticClass.Game_map;
+
+        firstX = -size / 2.0f + 0.5f;
+        firstY = size / 2.0f - 0.5f;
+
+        GetHorNum();
+        GetVerNum();
+        GetField();
     }
 
     void Update()
