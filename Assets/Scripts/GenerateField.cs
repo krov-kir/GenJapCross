@@ -9,7 +9,6 @@ public class GenerateField : MonoBehaviour
 {
     public InputField InputSize;
     public InputField InputNumMap;
-    public ScrollRect scr;
 
     private void Awake()
     {
@@ -20,17 +19,20 @@ public class GenerateField : MonoBehaviour
         int size = StaticClass.Size;
         for (int i = 0; i < size; i++)
         {
-            List<bool> row = new List<bool>();
+            List<bool> row1 = new List<bool>();
+            List<bool> row2 = new List<bool>();
             for (int j = 0; j < size; j++)
             {
-                row.Add(false);
+                row1.Add(false);
+                row2.Add(false);
             }
-            StaticClass.Map.Add(row);
+            StaticClass.Map.Add(row1);
+            StaticClass.Game_map.Add(row2);
         }
     }
     public void Generate()
     {
-        var d = new DirectoryInfo("Assets/Maps/");
+        var d = new DirectoryInfo("Assets/Maps/Creatures/");
         long i = 0;
         FileInfo[] fis = d.GetFiles();
         foreach (FileInfo fi in fis)
@@ -49,12 +51,19 @@ public class GenerateField : MonoBehaviour
     }
     public void Load()
     {
-        string dir = "Assets/Maps/map";
+        string dir = "Assets/Maps/Games/map";
         if (InputNumMap.text == "")
+        {
             dir += "1.txt";
+            StaticClass.Num_map = "1";
+        }
         else
+        {
             dir += InputNumMap.text.ToString() + ".txt";
+            StaticClass.Num_map = InputNumMap.text.ToString();
+        }
         string[] lines = File.ReadAllLines(dir);
+
         StaticClass.Size = int.Parse(lines[0]);
         GenMap();
         for (int i = 1; i <= StaticClass.Size; i++)
@@ -62,11 +71,21 @@ public class GenerateField : MonoBehaviour
             for (int j = 0; j < StaticClass.Size; j++)
             {
                 if (lines[i][j] == '1')
-                    StaticClass.Map[i - 1][j] = true;
+                    StaticClass.Game_map[i - 1][j] = true;
                 else
-                    StaticClass.Map[i - 1][j] = false;
+                    StaticClass.Game_map[i - 1][j] = false;
             }
         }
-        SceneManager.LoadScene("Generator", LoadSceneMode.Single);
+        for (int i = StaticClass.Size + 1; i <= 2 * StaticClass.Size; i++)
+        {
+            for (int j = 0; j < StaticClass.Size; j++)
+            {
+                if (lines[i][j] == '1')
+                    StaticClass.Map[i - StaticClass.Size - 1][j] = true;
+                else
+                    StaticClass.Map[i - StaticClass.Size - 1][j] = false;
+            }
+        }
+        SceneManager.LoadScene("Game", LoadSceneMode.Single);
     }
 }

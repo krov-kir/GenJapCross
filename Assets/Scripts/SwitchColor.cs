@@ -9,14 +9,16 @@ public class SwitchColor : MonoBehaviour
     private int pos_x;
     private int pos_y;
 
-    private void Start()
+    void Start()
     {
         pos_x = int.Parse(name.Split(',')[0]);
         pos_y = int.Parse(name.Split(',')[1]);
-        if (StaticClass.Map[pos_x][pos_y] == false)
-            GetComponent<SpriteRenderer>().sprite = white;
-        else
+        if (StaticClass.Map[pos_x][pos_y])
             GetComponent<SpriteRenderer>().sprite = blue;
+        else
+            GetComponent<SpriteRenderer>().sprite = white;
+        //GetComponent<SpriteRenderer>().sprite = white;
+        //StaticClass.Map[pos_x][pos_y] = false;
     }
     void OnMouseDown()
     {
