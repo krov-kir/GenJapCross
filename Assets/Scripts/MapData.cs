@@ -1,4 +1,3 @@
-[System.Serializable]
 public class MapData
 {
     public string __size;

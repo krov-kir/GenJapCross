@@ -1331,6 +1331,7 @@ GameObject:
   - component: {fileID: 1938356631}
   - component: {fileID: 1938356630}
   - component: {fileID: 1938356633}
+  - component: {fileID: 1938356634}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1418,10 +1419,18 @@ MonoBehaviour:
   InputSize: {fileID: 584747687}
   InputNumMap: {fileID: 1294631408}
   saveFile: 
-  _MapData:
-    __size: 
-    __game_map: 
-    __curr_map: 
+--- !u!114 &1938356634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938356629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29cc8a2ff7064b34ea8c34090a1000b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2142287244
 GameObject:
   m_ObjectHideFlags: 0
