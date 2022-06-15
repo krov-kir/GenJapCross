@@ -345,6 +345,11 @@ MonoBehaviour:
   square: {fileID: 5289536505924660693, guid: d44f1d009fc82bc428bc2ad23f8efff6, type: 3}
   size: 3
   camera: {fileID: 519420031}
+  _MapData:
+    size: 
+    _game_map: 
+    _curr_map: 
+  saveFile: 
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -487,7 +492,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 519420030}
         m_TargetAssemblyTypeName: CreateField, Assembly-CSharp
-        m_MethodName: SaveToFile
+        m_MethodName: SaveToJson
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

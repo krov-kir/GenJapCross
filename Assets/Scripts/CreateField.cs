@@ -9,56 +9,45 @@ public class CreateField : MonoBehaviour
     public GameObject square;
     public int size;
     public new Camera camera;
+    [SerializeField] private MapData _MapData = new MapData();
+    [SerializeField] private string saveFile;
 
-    public void SaveToFile()
+    public void SaveToJson()
     {
-        string dir = "Assets/Maps/Creatures/map";
-        dir += (StaticClass.Num_map + ".txt");
-        var f = new FileInfo(dir);
-        f.Create();
+        _MapData.__size = size.ToString();
 
-        if (File.Exists(dir))
+        string _game_map = "";
+        string _curr_map = "";
+        for (int i = 0; i < size; i++)
         {
-            var _curr_map = StaticClass.Map;
-            StreamWriter sw;
-            sw = f.AppendText();
-            sw.WriteLine(StaticClass.Size.ToString());
-            //File.WriteAllText(dir, StaticClass.Size.ToString() + "\n");
-            for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
             {
-                string s = "";
-                for (int j = 0; j < size; j++)
-                {
-                    if (_curr_map[i][j])
-                        s += "1";
-                    else
-                        s += "0";
-                }
-                //s += "\n";
-                sw.WriteLine(s);
-                //File.AppendAllText(dir, s);
+                if (StaticClass.Map[i][j])
+                    _game_map += '1';
+                else
+                    _game_map += '0';
+
+                if (StaticClass.Game_map[i][j])
+                    _curr_map += '1';
+                else
+                    _curr_map += '0';
             }
-            for (int i = 0; i < size; i++)
-            {
-                string s = "";
-                for (int j = 0; j < size; j++)
-                    s += "0";
-                //s += "\n";
-                sw.WriteLine(s);
-                //File.AppendAllText(dir, s);
-            }
-            sw.Close();
         }
-        else
-        {
-            Debug.Log("Not exists");
-        }
+        _MapData.__game_map = _game_map;
+        _MapData.__curr_map = _curr_map;
+
+        File.WriteAllText(saveFile, JsonUtility.ToJson(_MapData));
     }
 
     public void BackToMenu()
     {
-        SaveToFile();
+        SaveToJson();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+    }
+
+    void Awake()
+    {
+        saveFile = Application.persistentDataPath + "/map" + StaticClass.Num_map + ".json";
     }
 
     void Start()

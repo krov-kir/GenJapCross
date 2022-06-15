@@ -9,6 +9,8 @@ public class GenerateField : MonoBehaviour
 {
     public InputField InputSize;
     public InputField InputNumMap;
+    [SerializeField] private string saveFile;
+    [SerializeField] private MapData _MapData = new MapData();
 
     private void Awake()
     {
@@ -32,18 +34,17 @@ public class GenerateField : MonoBehaviour
     }
     public void Generate()
     {
-        var d = new DirectoryInfo("Assets/Maps/Creatures/");
+        var d = new DirectoryInfo(Application.persistentDataPath);
         long i = 0;
         FileInfo[] fis = d.GetFiles();
         foreach (FileInfo fi in fis)
         {
-            if (fi.Extension.Equals(".txt"))
+            if (fi.Extension.Equals(".json"))
                 i++;
         }
-        
 
         if (InputSize.text == "")
-            StaticClass.Size = 6;
+            StaticClass.Size = 10;
         else
             StaticClass.Size = int.Parse(InputSize.text);
         GenMap();
@@ -52,39 +53,45 @@ public class GenerateField : MonoBehaviour
     }
     public void Load()
     {
-        string dir = "Assets/Maps/Games/map";
+        saveFile = Application.persistentDataPath + "/map";
         if (InputNumMap.text == "")
         {
-            dir += "1.txt";
+            saveFile += "1.json";
             StaticClass.Num_map = "1";
         }
         else
         {
-            dir += InputNumMap.text.ToString() + ".txt";
+            saveFile += InputNumMap.text.ToString() + ".json";
             StaticClass.Num_map = InputNumMap.text.ToString();
         }
-        string[] lines = File.ReadAllLines(dir);
+        if (File.Exists(saveFile))
+        {
+            string fileContents = File.ReadAllText(saveFile);
+            _MapData = JsonUtility.FromJson<MapData>(fileContents);
+        }
+        else
+            Debug.Log("File doesnt exist!");
 
-        StaticClass.Size = int.Parse(lines[0]);
+        StaticClass.Size = int.Parse(_MapData.__size);
         GenMap();
-        for (int i = 1; i <= StaticClass.Size; i++)
+        for (int i = 0; i < StaticClass.Size; i++)
         {
             for (int j = 0; j < StaticClass.Size; j++)
             {
-                if (lines[i][j] == '1')
-                    StaticClass.Game_map[i - 1][j] = true;
+                if (_MapData.__game_map[i * StaticClass.Size + j] == '1')
+                    StaticClass.Game_map[i][j] = true;
                 else
-                    StaticClass.Game_map[i - 1][j] = false;
+                    StaticClass.Game_map[i][j] = false;
             }
         }
-        for (int i = StaticClass.Size + 1; i <= 2 * StaticClass.Size; i++)
+        for (int i = 0; i < StaticClass.Size; i++)
         {
             for (int j = 0; j < StaticClass.Size; j++)
             {
-                if (lines[i][j] == '1')
-                    StaticClass.Map[i - StaticClass.Size - 1][j] = true;
+                if (_MapData.__curr_map[i * StaticClass.Size + j] == '1')
+                    StaticClass.Map[i][j] = true;
                 else
-                    StaticClass.Map[i - StaticClass.Size - 1][j] = false;
+                    StaticClass.Map[i][j] = false;
             }
         }
         SceneManager.LoadScene("Game", LoadSceneMode.Single);

@@ -17,42 +17,38 @@ public class Play : MonoBehaviour
     private List<List<bool>> _curr_map;
     private float firstX;
     private float firstY;
-    public void SaveToFile()
+    [SerializeField] private MapData _MapData = new MapData();
+    [SerializeField] private string saveFile;
+    public void SaveToJson()
     {
-        string dir = "Assets/Maps/Games/map";
-        dir += (StaticClass.Num_map + ".txt");
-        File.WriteAllText(dir, StaticClass.Size.ToString() + "\n");
+        _MapData.__size = size.ToString();
+
+        string __game__map = "";
+        string __curr__map = "";
         for (int i = 0; i < size; i++)
         {
-            string s = "";
             for (int j = 0; j < size; j++)
             {
-                if (StaticClass.Game_map[i][j])
-                    s += "1";
+                if (_game_map[i][j])
+                    __game__map += '1';
                 else
-                    s += "0";
-            }
-            s += "\n";
-            File.AppendAllText(dir, s);
-        }
-        for (int i = 0; i < size; i++)
-        {
-            string s = "";
-            for (int j = 0; j < size; j++)
-            {
-                if (StaticClass.Map[i][j])
-                    s += "1";
+                    __game__map += '0';
+
+                if (_curr_map[i][j])
+                    __curr__map += '1';
                 else
-                    s += "0";
+                    __curr__map += '0';
             }
-            s += "\n";
-            File.AppendAllText(dir, s);
         }
+        _MapData.__game_map = __game__map;
+        _MapData.__curr_map = __curr__map;
+
+        File.WriteAllText(saveFile, JsonUtility.ToJson(_MapData));
     }
 
     public void BackToMenu()
     {
-        SaveToFile();
+        SaveToJson();
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
 
@@ -113,7 +109,8 @@ public class Play : MonoBehaviour
             if (c != 0)
                 col.Add(c);
             ver_num.Add(col);
-            max = col.Max() >= max ? col.Max() : max;
+            if (col.Count > 0)
+                max = col.Max() >= max ? col.Max() : max;
         }
 
         camera.orthographicSize = size / 2.0f + max;
@@ -141,7 +138,10 @@ public class Play : MonoBehaviour
             }
         }
     }
-
+    void Awake()
+    {
+        saveFile = Application.persistentDataPath + "/map" + StaticClass.Num_map + ".json";
+    }
     void Start()
     {
         text.GetComponent<Text>().enabled = false;
