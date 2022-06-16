@@ -7,8 +7,11 @@ using System.IO;
 public class CreateField : MonoBehaviour
 {
     public GameObject square;
-    public int size;
     public new Camera camera;
+
+    [SerializeField] private float firstX;
+    [SerializeField] private float firstY;
+    [SerializeField] private int size;
     [SerializeField] private MapData _MapData = new MapData();
     [SerializeField] private string saveFile;
 
@@ -53,16 +56,11 @@ public class CreateField : MonoBehaviour
     void Start()
     {
         size = StaticClass.Size;
-        float firstX = -size / 2.0f + 0.5f;
-        float firstY = size / 2.0f - 0.5f;
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
-                GameObject clone = Instantiate(square, new Vector3(firstX + j, firstY - i, 1.0f), Quaternion.identity);
-                clone.name = i.ToString() + "," + j.ToString();
-            }
-        }
+        firstX = -size / 2.0f + 0.5f;
+        firstY = size / 2.0f - 0.5f;
+
+        Field field = gameObject.AddComponent<Field>();
+        field.SetField(size, square, firstX, firstY);
         camera.orthographicSize = size / 2.0f + 2.0f;
     }
 }

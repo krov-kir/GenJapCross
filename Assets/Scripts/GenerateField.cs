@@ -9,6 +9,7 @@ public class GenerateField : MonoBehaviour
 {
     public InputField InputSize;
     public InputField InputNumMap;
+
     [SerializeField] private string saveFile;
     [SerializeField] private MapData _MapData = new MapData();
 
@@ -64,6 +65,7 @@ public class GenerateField : MonoBehaviour
             saveFile += InputNumMap.text.ToString() + ".json";
             StaticClass.Num_map = InputNumMap.text.ToString();
         }
+
         if (File.Exists(saveFile))
         {
             string fileContents = File.ReadAllText(saveFile);
@@ -82,12 +84,7 @@ public class GenerateField : MonoBehaviour
                     StaticClass.Game_map[i][j] = true;
                 else
                     StaticClass.Game_map[i][j] = false;
-            }
-        }
-        for (int i = 0; i < StaticClass.Size; i++)
-        {
-            for (int j = 0; j < StaticClass.Size; j++)
-            {
+
                 if (_MapData.__curr_map[i * StaticClass.Size + j] == '1')
                     StaticClass.Map[i][j] = true;
                 else

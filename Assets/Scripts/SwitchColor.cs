@@ -17,8 +17,6 @@ public class SwitchColor : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = blue;
         else
             GetComponent<SpriteRenderer>().sprite = white;
-        //GetComponent<SpriteRenderer>().sprite = white;
-        //StaticClass.Map[pos_x][pos_y] = false;
     }
     void OnMouseDown()
     {

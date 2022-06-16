@@ -10,13 +10,14 @@ public class Play : MonoBehaviour
 {
     public GameObject square;
     public GameObject num;
-    public int size;
     public new Camera camera;
     public Text text;
-    private List<List<bool>> _game_map;
-    private List<List<bool>> _curr_map;
-    private float firstX;
-    private float firstY;
+
+    [SerializeField] private int size;
+    [SerializeField] private List<List<bool>> _game_map;
+    [SerializeField] private List<List<bool>> _curr_map;
+    [SerializeField] private float firstX;
+    [SerializeField] private float firstY;
     [SerializeField] private MapData _MapData = new MapData();
     [SerializeField] private string saveFile;
     public void SaveToJson()
@@ -126,18 +127,6 @@ public class Play : MonoBehaviour
             }
         }
     }
-
-    private void GetField()
-    {
-        for (int i = 0; i < size; i++)
-        {
-            for (int j = 0; j < size; j++)
-            {
-                GameObject clone = Instantiate(square, new Vector3(firstX + j, firstY - i, 1.0f), Quaternion.identity);
-                clone.name = i.ToString() + "," + j.ToString();
-            }
-        }
-    }
     void Awake()
     {
         saveFile = Application.persistentDataPath + "/map" + StaticClass.Num_map + ".json";
@@ -153,7 +142,8 @@ public class Play : MonoBehaviour
 
         GetHorNum();
         GetVerNum();
-        GetField();
+        Field field = gameObject.AddComponent<Field>();
+        field.SetField(size, square, firstX, firstY);
     }
 
     void Update()
